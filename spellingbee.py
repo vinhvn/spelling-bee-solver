@@ -6,13 +6,15 @@
 
 import json
 
+
 # a function to load the dictionary of valid english words.
 def load_dictionary():
     # import dictionary from json
     # credit to https://github.com/dwyl/english-words
-    with open('words_dictionary.json', 'r') as file:
+    with open("words_dictionary.json", "r") as file:
         # return a dictionary with the word as the key and the word length as the value, and remove all words that are less than 4 letters long
-        return {word: len(word) for word in json.load(file) if len(word) >= 4}
+        return {word: n for word in json.load(file) if (n := len(word)) >= 4}
+
 
 # a function to return all valid words that can be formed from the letters and the center letter.
 def get_valid_words(letters, center_letter, dictionary):
@@ -22,7 +24,12 @@ def get_valid_words(letters, center_letter, dictionary):
     if len(center_letter) != 1:
         return []
     allowed_letters = set(letters) | {center_letter}
-    return [word for word in dictionary if center_letter in word and all(letter in allowed_letters for letter in word)]
+    return [
+        word
+        for word in dictionary
+        if center_letter in word and set(word).issubset(allowed_letters)
+    ]
+
 
 # a function that returns the sorted list of valid words by word length.
 def spelling_bee(letters, center_letter, dictionary):
@@ -44,4 +51,3 @@ if __name__ == "__main__":
     print(f"Number of answers: {len(answers)}")
     for word in answers:
         print(word)
-
